@@ -1,0 +1,62 @@
+clear variables;
+global option
+load_options;
+[trainsplit,validsplit] = load_data_mnist;
+ [train,valid,trainlebal,validlebal,trainidx,valididx]= prepare_train_data_mnist(trainsplit,validsplit);
+clsIDX = 1:10;
+D = build_dict(trainsplit,validsplit,clsIDX);
+P = gen_P(length(clsIDX));
+tmp = 0;
+totalP = P;
+CLSIDX{1} = clsIDX;
+
+while (size(totalP,1) >  tmp&&tmp<8)
+    tmp = tmp+1;
+    [group,W,DICTIONARY{tmp},fromvalid,fromD] = singleLevel(D,train,clsIDX,trainlebal,valididx);
+    CLASSIFIER(tmp,:) = W;
+    for i = 1:length(group)
+        if (length(group{i})>1)
+            totalP = [totalP;gen_P(length(group{i}))];
+            CLSIDX = [CLSIDX;group(i)];
+        end
+    end
+end
+while (size(totalP,1) >  tmp&&tmp<8)
+    tmp = tmp+1;
+    cls = CLSIDX{tmp};
+    train = [];cidx=[];label=[];
+    for j = 1:length(cls)
+        cidx = [cidx,(cls(j)-1)*option.M+1:(cls(j))*option.M];
+        train = [train,trainsplit{cls(j)}];
+        l = zeros(length(cls),1);
+        l(j)=1;
+        label = [label,repmat(l,1,trainlen(cls(j)))];
+    end
+    newD = D(:,cidx);
+    [nxtP,group,W,DICTIONARY{tmp},misIDX,misINFO] = singleLevel(newD,train,CLSIDX{tmp},totalP(tmp,:),totalQidx(tmp,:),label);
+    CLASSIFIER(tmp,:) = W;
+%     DICTIONARY{tmp} = D;
+    for i = 1:length(group)
+        len = sum(trainlen(group{i}));
+        if (length(group{i})>1)
+            totalP = [totalP;nxtP(i,:)];
+            CLSIDX = [CLSIDX;group(i)];
+            q = randperm(len);
+            for j = 1:option.H
+                Qidx{i,j}= q((j-1)*floor(len/option.H)+1:j*floor(len/option.H));
+            end
+            totalQidx =[totalQidx; Qidx];
+        end
+    end
+end
+[correct,wrong] = evaluate(test, gt, DICTIONARY, CLASSIFIER, CLSIDX, totalP);
+
+
+
+    
+    
+    
+  
+
+
+
