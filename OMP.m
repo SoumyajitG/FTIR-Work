@@ -99,11 +99,10 @@ for kk = 1:k
     end
     
 end
-
 if ~slowMode  % (in slowMode, we already have this info)
  % For the last iteration, we need to do this without orthogonalizing A
  % so that the x coefficients match what is expected.
- x_T = A_T_nonorth(:,1:kk)\b;
+ x_T =pinv( A_T_nonorth(:,1:kk))*b;
  x( indx_set(1:kk) )   = x_T;
 end
 end

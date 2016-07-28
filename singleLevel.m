@@ -1,10 +1,10 @@
 function [group,W,D,fromvalid,fromD] = singleLevel(D,train,valid,trainlebal,validlebal,clsIDX,P,valididx)
 global option
 thr = 88;
-for Ns = 1:size(train,2)
-    SC(:,Ns) = OMP(D,train(:,Ns),option.T);
-end
-
+ for Ns = 1:size(train,2)
+     SC(:,Ns) = OMP(D,train(:,Ns),option.T);
+ end
+SC = OMPc(train,D,option.T);
 for iter=1:5%option.iter
     W = iter_W(trainlebal,P,SC);
     SC = iter_SC(D,trainlebal,train,W,P);
