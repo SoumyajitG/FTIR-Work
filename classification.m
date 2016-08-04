@@ -4,7 +4,7 @@ Nsample = size(Y,2);
 %SC = iter_SC(D,L,Y,W,P);
 for i = 1:Nsample
    SC(:,i) = OMP(D,Y(:,i),option.T);
-
+%SC(:,i) = OMP(D,Y(:,i),30);
 for j = 1 : option.H+1
     s(:,j) = W{j}*P{j}*SC(:,i);
 end
@@ -25,13 +25,13 @@ for i = 1: Nsample
     y = (1:Ncls)*cls(:,i);
     clsx = clsIDX*L(:,i);
     clsy = clsIDX*cls(:,i);
-    if x~= y
-        tmp = mod(i,option.validNumPerCls);
-        if tmp == 0
-            tmp = tmp+option.validNumPerCls;
-        end
-        fromvalid{clsx} = [fromvalid{clsx};valididx{clsx}(tmp)];
-    end
+%     if x~= y
+%         tmp = mod(i,option.validNumPerCls);
+%         if tmp == 0
+%             tmp = tmp+option.validNumPerCls;
+%         end
+%         fromvalid{clsx} = [fromvalid{clsx};valididx{clsx}(tmp)];
+%     end
     cm(y,x) = cm(y,x) + 1;
 end
 for i = 1:Ncls

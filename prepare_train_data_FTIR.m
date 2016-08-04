@@ -1,8 +1,8 @@
-function [train,valid,trainlebal,validlebal,trainidx,valididx]= prepare_train_data_mnist(trainsplit,validsplit,cls)
+function [train,valid,trainlebal,validlebal,trainidx,valididx]= prepare_train_data_FTIR(trainsplit,validsplit,cls)
 global option
 tmp=1;
 train = [];trainlebal = [];valid = [];validlebal = [];
-for i = 1:10
+for i = 1:16
     if ~isempty(find(cls == i))
         trainidx{i} = randperm(size(trainsplit{i},2),option.trainNumPerCls);
         valididx{i} = randperm(size(validsplit{i},2),option.validNumPerCls);

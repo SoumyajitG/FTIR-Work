@@ -1,8 +1,9 @@
-function [correct,wrong]=evaluate(Y,label,D,W,clsIDX,P)
+function [correct,wrong]=evaluate(Y,label,D,W,clsIDX,P,child)
 global option
 load_options;
 correct = 0;wrong = 0;
 for i = 1:size(Y,2)
+    disp(i);
     idx=1;
     while idx<= length(D)
         s=[];cls=[];
@@ -13,8 +14,7 @@ for i = 1:size(Y,2)
         end
         cls(:,i) = vote1(s);
         c = sum(clsIDX{idx}*cls(:,i));
-        j = idx+1;
-        for j = idx+1:length(clsIDX)
+        for j = child{idx}(1): child{idx}(end)
             if ~isempty(find(clsIDX{j} == c))
                 idx = j;
                 break;

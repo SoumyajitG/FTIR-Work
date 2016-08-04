@@ -5,5 +5,6 @@ function[trainsplit,validsplit,testsplit] = load_data_mnist()
         validsplit{i+1} = data.D(4001:end,:)'/255;
         data = load(['mnist/test',num2str(i),'.mat']);
         testsplit{i+1} = data.D'/255;
+        trainsplit{i+1} = [trainsplit{i+1} ,data.D'/255];
     end
 end
